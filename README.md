@@ -1,176 +1,362 @@
-# CartPilot AI: Your Intelligent Shopping and Payment Agent
+# 🛒 CartPilot AI
+### Your Intelligent Shopping and Payment Agent
 
-CartPilot AI is an AI-powered shopping assistant built for a hackathon.
-It helps users search products in natural language, browse a catalog,
-get recommendations and manage a cart.
+CartPilot AI is an AI-powered shopping assistant that helps users discover, compare, and purchase products through natural-language conversations. It combines Google Gemini AI with a product recommendation engine, smart cart management, and secure PayPal Sandbox checkout.
 
-## Current status: Day 1 foundation
+The goal is to make online shopping simpler, smarter, and more personalized by transforming natural-language shopping requests into actionable product recommendations.
 
-| Feature | Status |
+---
+
+## ✨ Key Features
+
+### 🤖 AI-Powered Shopping Assistant
+- Understands shopping requests written in natural language.
+- Uses Google Gemini AI to extract product categories, budgets, and preferences.
+- Converts user requirements into structured shopping intents.
+- Provides personalized product recommendations.
+- Explains why products match the user's requirements.
+- Supports follow-up conversations and product comparisons.
+
+### 🔍 Smart Product Discovery
+- Searches products from a database.
+- Filters products based on user requirements.
+- Ranks suitable products according to preferences.
+- Displays product information and availability.
+- Uses actual database information for recommendations.
+
+### 🛒 Intelligent Cart Management
+- Add recommended products to the shopping cart.
+- Manage product quantities.
+- Calculate subtotal and total.
+- Validate product prices and stock on the backend.
+
+### 💳 PayPal Sandbox Integration
+- Creates PayPal Sandbox orders through the backend.
+- Redirects users to PayPal for payment approval.
+- Captures approved payments through the backend.
+- Verifies payment status before displaying success.
+- Uses Sandbox transactions for demonstration and testing.
+
+**Note:** PayPal Sandbox is used for testing. The project does not process real payments.
+
+### 🔐 Security and Reliability
+- Keeps API credentials on the backend.
+- Validates product prices and availability using server-side data.
+- Requires user approval before payment.
+- Verifies payment capture before confirming an order.
+- Separates AI recommendations from payment execution.
+
+---
+
+## 🛠️ Technology Stack
+
+| Component | Technology |
 |---|---|
-| Product catalog (20 sample products, search, filters, sorting) | Working |
-| Shopping cart (quantities, totals, server-side validation) | Working |
-| AI shopping assistant | **Demo only.** Rule-based logic, *not* a real LLM |
-| Gemini AI integration | Not implemented yet (planned) |
-| PayPal Sandbox payments | Not implemented yet (planned). Checkout button is a placeholder |
+| Frontend | React.js, Vite, JavaScript |
+| UI | CSS, Lucide React |
+| API Communication | Axios |
+| Backend | Python, FastAPI |
+| Database | SQLite |
+| ORM | SQLAlchemy |
+| Data Validation | Pydantic |
+| AI Integration | Google Gemini API |
+| Payment Gateway | PayPal REST API (Sandbox) |
+| Version Control | Git and GitHub |
 
-## Tech stack
+---
 
-- **Frontend:** React 18, Vite, JavaScript, Axios, React Router, Lucide React, custom responsive CSS
-- **Backend:** Python, FastAPI, SQLAlchemy, SQLite, Pydantic
+## 🏗️ System Architecture
 
-## Project structure
-
+```text
+                 USER
+                   |
+                   v
+          React Frontend (Vite)
+                   |
+                   v
+          FastAPI Backend
+                   |
+          +--------+--------+
+          |                 |
+          v                 v
+      Gemini AI         SQLite Database
+          |                 |
+          v                 v
+   Intent Extraction   Product Search
+          |                 |
+          +--------+--------+
+                   |
+                   v
+        Product Recommendations
+                   |
+                   v
+              Shopping Cart
+                   |
+                   v
+        Backend Price Validation
+                   |
+                   v
+          PayPal Sandbox API
+                   |
+                   v
+         User Payment Approval
+                   |
+                   v
+         Backend Payment Capture
+                   |
+                   v
+        Payment Verification
+                   |
+                   v
+          Order Confirmation
 ```
+
+---
+
+## 📁 Project Structure
+
+```text
 CartPilotAI/
+│
 ├── backend/
-│   ├── .env.example
+│   ├── app/
+│   │   ├── routes/
+│   │   │   ├── cart.py
+│   │   │   ├── chat.py
+│   │   │   └── products.py
+│   │   │
+│   │   ├── services/
+│   │   │   ├── cart_service.py
+│   │   │   ├── chat_service.py
+│   │   │   └── gemini_client.py
+│   │   │
+│   │   ├── models/
+│   │   │   └── schemas.py
+│   │   │
+│   │   ├── database.py
+│   │   └── main.py
+│   │
+│   ├── .env
 │   ├── requirements.txt
-│   └── app/
-│       ├── main.py          # FastAPI app, CORS, startup (create tables + seed)
-│       ├── database.py      # SQLite engine and session
-│       ├── models/          # Product table + Pydantic schemas
-│       ├── routes/          # products, chat, cart endpoints
-│       └── services/        # seed data, rule-based chat, cart validation
-└── frontend/
-    ├── .env.example
-    └── src/
-        ├── components/      # Navbar, ProductCard, SearchBar, ...
-        ├── context/         # CartContext (shared cart state)
-        ├── pages/           # Home, Catalog, Assistant, Cart
-        ├── services/api.js  # All Axios calls to the backend
-        └── utils/format.js  # Price formatting
+│   └── test_paypal_connection.py
+│
+├── frontend/
+│   ├── src/
+│   │   ├── components/
+│   │   ├── context/
+│   │   ├── pages/
+│   │   ├── services/
+│   │   ├── App.jsx
+│   │   └── main.jsx
+│   │
+│   ├── package.json
+│   └── index.html
+│
+├── .gitignore
+└── README.md
 ```
 
-## Prerequisites
+*The structure above shows the main project files; additional files and components may be present.*
 
-- Python 3.9+ (`python --version`)
-- Node.js 18+ (`node --version`)
+---
+
+## ⚙️ Installation and Setup
+
+### 1. Prerequisites
+
+Install the following before running the project:
+
+- Python 3.10 or later
+- Node.js and npm
+- Git
 - VS Code (recommended)
+- Google Gemini API key
+- PayPal Developer Sandbox account
 
-## Setup on Windows (PowerShell)
+### 2. Clone the Repository
 
-Open **two** PowerShell windows: one for the backend, one for the frontend.
-
-### 1. Backend
-
-```powershell
-cd CartPilotAI\backend
-python -m venv venv
-.\venv\Scripts\Activate.ps1
-pip install -r requirements.txt
-Copy-Item .env.example .env
-uvicorn app.main:app --reload --port 8000
+```bash
+git clone https://github.com/ingawalemadhura5722-glitch/CartPilotAI.git
+cd CartPilotAI
 ```
 
-> If PowerShell says *"running scripts is disabled on this system"*, run this once and try again:
-> `Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned`
+### 3. Backend Setup
 
-The first start creates `cartpilot.db` and seeds 20 sample products automatically.
-Backend: http://localhost:8000 · Swagger docs: http://localhost:8000/docs
+Navigate to the backend folder:
 
-### 2. Frontend
+```bash
+cd backend
+```
+
+Create a virtual environment:
+
+```bash
+python -m venv venv
+```
+
+Activate it on Windows PowerShell:
 
 ```powershell
-cd CartPilotAI\frontend
+.\venv\Scripts\Activate.ps1
+```
+
+Install the dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+### 4. Configure Environment Variables
+
+Create a `.env` file inside the `backend` folder.
+
+Add the following configuration:
+
+```env
+GEMINI_API_KEY=your_gemini_api_key
+
+PAYPAL_CLIENT_ID=your_paypal_sandbox_client_id
+PAYPAL_CLIENT_SECRET=your_paypal_sandbox_secret
+PAYPAL_BASE_URL=https://api-m.sandbox.paypal.com
+```
+
+Add any additional configuration variables required by your implementation.
+
+**Important:** Replace the placeholder values with your own credentials. Never upload `.env` or expose API secrets on GitHub.
+
+### 5. Run the Backend
+
+From the backend directory, run:
+
+```bash
+python -m uvicorn app.main:app --reload
+```
+
+The backend should be available at:
+
+```text
+http://127.0.0.1:8000
+```
+
+FastAPI interactive API documentation:
+
+```text
+http://127.0.0.1:8000/docs
+```
+
+### 6. Frontend Setup
+
+Open another terminal and navigate to the frontend directory:
+
+```bash
+cd frontend
+```
+
+Install dependencies:
+
+```bash
 npm install
-Copy-Item .env.example .env
+```
+
+Start the development server:
+
+```bash
 npm run dev
 ```
 
-Open http://localhost:5173
+Open the local URL displayed in the terminal (usually `http://localhost:5173`).
 
-### Reset the database (optional)
+---
 
-```powershell
-cd CartPilotAI\backend
-.\venv\Scripts\Activate.ps1
-python -m app.services.seed
-```
+## 🧠 How CartPilot AI Works
 
-## API endpoints
+1. **User Input:** The user describes what they want to purchase in natural language.
+2. **AI Understanding:** Gemini AI extracts the category, budget, and shopping preferences.
+3. **Intent Validation:** The backend validates the structured shopping intent.
+4. **Product Search:** The application searches the product database.
+5. **Product Ranking:** Matching products are filtered and ranked.
+6. **AI Explanation:** The assistant explains product recommendations and comparisons using available product information.
+7. **Cart Management:** The user adds selected products to the shopping cart.
+8. **Price Validation:** The backend independently verifies product prices, quantities, and stock.
+9. **Payment Creation:** The backend creates a PayPal Sandbox order.
+10. **User Approval:** The user reviews and approves the payment through PayPal.
+11. **Payment Capture:** The backend captures and verifies the approved payment.
+12. **Confirmation:** The application confirms the payment only after successful backend verification.
 
-| Method | Path | Description |
-|---|---|---|
-| GET | `/` | Welcome message |
-| GET | `/health` | Health check (also tests the database) |
-| GET | `/api/products` | All products. Optional: `q`, `category`, `sort` (`price_asc`, `price_desc`, `rating`) |
-| GET | `/api/products/{product_id}` | One product (404 if missing) |
-| GET | `/api/categories` | Distinct categories |
-| POST | `/api/chat` | Demo assistant: `{ "message": "..." }` |
-| POST | `/api/cart/validate` | Re-checks IDs, quantities, stock and prices |
+---
 
-## Testing the API with Swagger
+## 💱 Currency Handling
 
-1. Start the backend and open http://localhost:8000/docs
-2. Click an endpoint, then **Try it out**, then **Execute**.
+The product catalog maintains prices in INR (₹).
 
-**`GET /health`**: expect `{"status":"ok","database":"connected"}`.
+For the PayPal Sandbox demonstration, the application uses a configurable INR-to-USD demo conversion rate where required by the payment flow.
 
-**`GET /api/products`**: expect 20 products. Try `category` = `Laptops`, or `sort` = `price_asc`.
+This conversion is for demonstration purposes and should not be interpreted as a live foreign exchange rate.
 
-**`GET /api/products/{product_id}`**: use `1` (200 OK), then `999` (404 "Product 999 not found").
+---
 
-**`POST /api/chat`** body:
-```json
-{ "message": "Find me a laptop under ₹60,000 for programming." }
-```
-Expect laptops priced at or below ₹60,000 (Lenovo IdeaPad first).
+## 🧪 Testing
 
-**`POST /api/cart/validate`**: a valid cart:
-```json
-{ "items": [ { "product_id": 1, "quantity": 2, "price": 58990 } ] }
-```
-Expect `"valid": true`. Then try these to see errors:
-```json
-{ "items": [ { "product_id": 1, "quantity": 1, "price": 100 } ] }
-```
-→ price mismatch
-```json
-{ "items": [ { "product_id": 11, "quantity": 1, "price": 24900 } ] }
-```
-→ out of stock (product 11 is AirPods Pro, stock 0)
-```json
-{ "items": [ { "product_id": 9999, "quantity": 1, "price": 10 } ] }
-```
-→ product not found
+The following areas should be tested before demonstration:
 
-## Day 1 testing checklist
+- Natural-language shopping requests.
+- AI intent extraction and validation.
+- Product search and recommendations.
+- Product comparison and explanations.
+- Adding and updating cart items.
+- Backend price and stock validation.
+- PayPal Sandbox order creation.
+- Buyer approval and payment capture.
+- Successful, failed, and cancelled payment handling.
+- Protection of API credentials.
 
-**Backend**
-- [ ] `uvicorn` starts without errors and `cartpilot.db` is created
-- [ ] `/health` returns `ok`
-- [ ] `/api/products` returns 20 products; `q`, `category` and `sort` work
-- [ ] `/api/products/999` returns 404
-- [ ] `/api/categories` returns 5 categories
-- [ ] `/api/chat` returns laptops under ₹60,000 for the example prompt
-- [ ] `/api/cart/validate` detects price mismatch, out-of-stock and unknown product
+---
 
-**Frontend**
-- [ ] Home page loads with hero, stats, featured and recommended products
-- [ ] Home search sends you to the assistant and a reply appears
-- [ ] Catalog shows 20 products; search, category tabs and price sorting work
-- [ ] "Add to Cart" updates the cart badge; out-of-stock item is disabled
-- [ ] Cart: +/− quantity, remove, subtotal and total update correctly
-- [ ] Cart shows "Prices and stock verified by the server"
-- [ ] Checkout button only shows an "isn't available yet" notice (no fake payment)
-- [ ] Assistant page: example prompts work and "Demo assistant" label is visible
-- [ ] Stop the backend: pages show a clear error message with a retry button
-- [ ] Layout works on desktop, tablet and mobile widths (use browser dev tools)
+## 🔒 Security Considerations
 
-## Roadmap
+- Gemini and PayPal credentials must remain on the backend.
+- The frontend must not determine the authoritative payment amount.
+- Product prices and stock must be validated using server-side data.
+- AI-generated responses must not be treated as authoritative product or payment records.
+- Payment success must depend on verified backend capture results.
+- Users must explicitly approve payments.
+- Sandbox credentials must never be replaced with real credentials in a public demo repository.
 
-- **Day 2:** Gemini AI integration (backend only, key stored in `backend/.env`)
-- **Day 3:** Product comparison and personalized recommendations
-- **Day 4:** PayPal Sandbox checkout
-- **Day 5:** Polish, demo preparation
+---
 
-## Security notes
+## 🚀 Future Enhancements
 
-- Never put API keys or secrets in frontend code. Anything starting with `VITE_` is public.
-- `.env` files are ignored by Git. Commit only `.env.example`.
-- The cart is re-validated on the server; never trust prices sent from the browser.
+- Integration with real product catalog APIs.
+- Real-time inventory synchronization.
+- Advanced recommendation algorithms.
+- Personalized shopping profiles.
+- Multiple payment gateway support.
+- Order history and tracking dashboard.
+- Voice-based shopping assistant.
+- Deployment to a cloud platform.
+- Advanced fraud detection and transaction monitoring.
 
-## License
+---
 
-MIT, see [LICENSE](LICENSE).
+## 🎯 Project Objective
+
+CartPilot AI aims to bridge the gap between traditional e-commerce platforms and intelligent conversational shopping.
+
+Instead of manually searching through hundreds of products, users can simply describe their requirements and receive relevant recommendations, comparisons, and a guided checkout experience.
+
+**From shopping intent to intelligent recommendations to payment — all in one place.**
+
+---
+
+## 👩‍💻 Developer
+
+**Madhura Ingawale**
+
+- GitHub: [@ingawalemadhura5722-glitch](https://github.com/ingawalemadhura5722-glitch)
+- Project Repository: [CartPilot AI](https://github.com/ingawalemadhura5722-glitch/CartPilotAI)
+
+---
+
+## 📄 License
+
+This project is developed as a hackathon project and educational demonstration. Add a specific open-source license if you intend to permit reuse, modification, or distribution.
