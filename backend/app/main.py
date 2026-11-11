@@ -15,14 +15,15 @@ from sqlalchemy.orm import Session
 
 # database.py also loads backend/.env, so env variables are ready below.
 from app.database import Base, SessionLocal, engine, get_db
-from app import models  # noqa: F401  (registers the Product table)
-from app.routes import cart, chat, products
+from app import models  # noqa: F401  (registers the Product, Order and OrderItem tables)
+from app.routes import cart, chat, payments, products   # NEW (Day 3): payments
 from app.services.seed import seed_products
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Runs once when the server starts: create tables and seed sample data."""
+    # create_all only ADDS missing tables (such as orders). Existing data is untouched.
     Base.metadata.create_all(bind=engine)
     db = SessionLocal()
     try:
@@ -36,8 +37,8 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(
     title="CartPilot AI API",
-    description="Day 1 foundation: product catalog, demo (rule-based) assistant and cart validation.",
-    version="0.1.0",
+    description="Product catalog, Gemini shopping assistant, cart validation and PayPal Sandbox checkout.",
+    version="0.3.0",
     lifespan=lifespan,
 )
 
@@ -58,6 +59,7 @@ app.add_middleware(
 app.include_router(products.router)
 app.include_router(chat.router)
 app.include_router(cart.router)
+app.include_router(payments.router)   # NEW (Day 3)
 
 
 @app.get("/", tags=["General"])
@@ -65,7 +67,7 @@ def root():
     return {
         "message": "Welcome to the CartPilot AI API",
         "docs": "/docs",
-        "stage": "Day 1 foundation (demo assistant, no real AI or payments yet)",
+        "stage": "Day 3: Gemini assistant + PayPal Sandbox checkout",
     }
 
 

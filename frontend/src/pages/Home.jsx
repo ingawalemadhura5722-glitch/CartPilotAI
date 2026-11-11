@@ -82,7 +82,7 @@ export default function Home() {
               </button>
             ))}
           </div>
-          <p className="hero-note">The assistant is a demo that uses simple rules. Real AI arrives in a later stage.</p>
+          <p className="hero-note">Powered by Gemini. Recommendations always come from our product database.</p>
         </div>
       </section>
 
@@ -180,8 +180,8 @@ export default function Home() {
             <div className="feature-card">
               <ShieldCheck size={26} />
               <h3>Secure checkout</h3>
-              <p>PayPal Sandbox checkout is planned for a later stage. No payments happen today.</p>
-              <span className="badge badge-soon">Coming soon</span>
+              <p>Pay with the PayPal Sandbox at checkout. Test money only, no real charges.</p>
+              <span className="badge badge-live">Available (sandbox)</span>
             </div>
           </div>
         </section>

@@ -6,6 +6,8 @@ import Home from "./pages/Home.jsx";
 import Catalog from "./pages/Catalog.jsx";
 import Assistant from "./pages/Assistant.jsx";
 import Cart from "./pages/Cart.jsx";
+import PaymentSuccess from "./pages/PaymentSuccess.jsx";
+import PaymentCancel from "./pages/PaymentCancel.jsx";
 import NotFound from "./pages/NotFound.jsx";
 
 // Scroll to the top whenever the page changes.
@@ -28,6 +30,8 @@ export default function App() {
           <Route path="/products" element={<Catalog />} />
           <Route path="/assistant" element={<Assistant />} />
           <Route path="/cart" element={<Cart />} />
+          <Route path="/payment/success" element={<PaymentSuccess />} />
+          <Route path="/payment/cancel" element={<PaymentCancel />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
